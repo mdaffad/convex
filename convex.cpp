@@ -10,36 +10,36 @@ struct line
     point a,b;
 
 };
-bool over = false,below = false;
-int num;
+
 int main()
 {
-    
-    srand (time(NULL));
-    float a,b;
     int indexer = 0;
+    bool over = false,below = false;
+    int num;
+
+    // Generate array and random point
     scanf("%d",&num);
     point input[num];
     line output[num];
     for (int i = 0; i < num; i++)
     {
-        input[i].x = rand()%100;
-        input[i].y = rand()%100;
-        // printf("%f %f\n",input[i].x, input[i].y);
+        input[i].x = rand();
+        input[i].y = rand();
     }
+    
+    // start clock time
     clock_t begin = clock();
 
-
+    // Start Brute Force
     for (int i = 0; i < num-1; i++)
     {
         for (int j = i+1; j < num; j++)
         {
-            // printf("i j %d %d\n",i ,j);
             float test;
             for (int k = 0; k < num; k++)
             {
-                // printf("i j k %d %d %d\n",i ,j, k);
                 if (!( ((input[i].x == input[k].x) && (input[i].y == input[k].y)) || ( (input[j].x == input[k].x) && (input[j].y == input[k].y))))
+                // There are not an identical-pair point
                 {
                     test = (input[j].y - input[i].y)*input[k].x + (input[i].x - input[j].x)*input[k].y - input[i].x*input[j].y + input[i].y*input[j].x; 
                     if (test > 0)
@@ -52,6 +52,7 @@ int main()
                     }
                     else
                     {
+                        // Collinier test
                         if  (!(   ((input[i].x < input[k].x) && (input[i].y < input[k].y) &&
                                 (input[j].x > input[k].x) && (input[j].y > input[k].y)) ||
                                 ((input[i].x < input[k].x) && (input[i].y > input[k].y) &&
@@ -70,10 +71,15 @@ int main()
                                 (input[i].x == input[k].x) && (input[i].y < input[k].y)) 
                             ))
                         {
+                            // If not satisfy the Collinier test
                             over = true;
                             below = true;
-                            break;
                         }
+                    }
+                    if (over && below)
+                    {
+                        // Two region plane has been filled with point
+                        break;
                     }
                 }
                 
@@ -92,9 +98,13 @@ int main()
         }
     }
 
+    // end clock
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     
+
+    // print result
+    printf("\n\n");
     for (int i = 0; i < indexer; i++)
     {
         if (i == 0 && indexer != 1)
@@ -117,6 +127,6 @@ int main()
         
         
     }
-    printf("%f", time_spent);
+    printf("\ntime spent : %f\n", time_spent);
     return 0;
 }
